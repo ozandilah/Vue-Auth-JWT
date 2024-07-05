@@ -4,6 +4,7 @@ import { computed, onMounted } from "vue";
 
 const userStore = useUserStores();
 const user = computed(() => userStore.getUser);
+const isLoggedIn = computed(() => userStore.isLoggedIn);
 console.log(user);
 
 onMounted(() => {
