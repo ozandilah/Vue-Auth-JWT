@@ -1,5 +1,6 @@
 import { useUserStores } from "@/stores/user";
 import Login from "@/views/Auth/Login.vue";
+import Register from "@/views/Auth/Register.vue";
 import Overview from "@/views/Overview/Overview.vue";
 import Cookies from "js-cookie";
 import { createRouter, createWebHistory } from "vue-router";
@@ -11,6 +12,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Login,
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: Register,
     },
     {
       path: "/overview",
@@ -37,10 +43,6 @@ router.beforeEach(async (to, from, next) => {
         next();
       }
     } catch (error) {
-      console.log("====================================");
-      console.log("Error Fetching User: ", error);
-      console.log("====================================");
-      //   Jika token tidak valid, hapus token dan arahkan ke halaman login
       Cookies.remove("token");
       if (to.meta.requiresAuth) {
         next({ name: "home" });

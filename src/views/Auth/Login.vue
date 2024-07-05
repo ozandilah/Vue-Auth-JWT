@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label";
 
 import { setLogin, useUserStores } from "@/stores/user";
 import Cookies from "js-cookie";
+import { toast } from "vue3-toastify";
+
 const useStore = useUserStores();
 const router = useRouter();
 const Form = ref({ email: "", password: "" });
@@ -24,25 +26,19 @@ const onSubmit = async () => {
     const res = await setLogin(data);
 
     if (!res || !res.data || !res.data.data.token) {
-      console.log("====================================");
-      console.log("Gagal Login atau Token Tidak Ditemukan");
-      console.log("====================================");
+      toast.error("Gagal Login atau Token Tidak Ditemukan");
       return;
     }
 
     const token = res.data.data.token;
-    console.log("Token yang didapatkan: ", token);
-    Cookies.set("token", token, { expires: 1 }); // Set cookie dengan waktu kadaluarsa 1 hari
 
-    const storedToken = Cookies.get("token");
-    console.log("Token yang disimpan dalam cookie: ", storedToken);
+    Cookies.set("token", token);
 
     await useStore.fetchingUser();
     router.push("/overview");
+    toast.success("Berhasil Masuk");
   } catch (error) {
-    console.log("====================================");
-    console.log("Error saat login: ", error);
-    console.log("====================================");
+    toast.error("Gagal Login");
   }
 };
 </script>
@@ -60,17 +56,22 @@ const onSubmit = async () => {
           </CardHeader>
           <CardContent class="grid gap-4">
             <div class="grid gap-2">
-              <Label for="username">Username</Label>
+              <Label for="email">Email</Label>
               <Input
-                id="username"
+                id="email"
                 type="text"
-                placeholder="username"
+                placeholder="masozan@gmail.com"
                 v-model="Form.email"
               />
             </div>
             <div class="grid gap-2">
               <Label for="password">Password</Label>
-              <Input id="password" type="password" v-model="Form.password" />
+              <Input
+                id="password"
+                type="password"
+                v-model="Form.password"
+                placeholder="********"
+              />
             </div>
           </CardContent>
           <CardFooter class="flex-col space-y-2">
@@ -78,7 +79,7 @@ const onSubmit = async () => {
             <p>
               Don't have an account?
               <RouterLink
-                to="/auth/register"
+                to="/register"
                 class="border-b border-gray-500 text-muted-foreground hover:text-primary"
               >
                 Register

@@ -1,6 +1,6 @@
 import callAPI from "@/config/api";
 import { defineStore } from "pinia";
-import type { LoginTypes, userTypes } from "./data-types";
+import type { LoginTypes, RegisterTypes, userTypes } from "./data-types";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -17,7 +17,6 @@ export const useUserStores = defineStore("User", {
       try {
         const url = "http://localhost:3000/auth/user";
         const token = Cookies.get("token");
-        console.log("Token dari cookie: ", token);
         if (!token) {
           throw new Error("Token not found in cookies");
         }
@@ -29,12 +28,7 @@ export const useUserStores = defineStore("User", {
         });
         this.User = res.data.data.userdetail;
       } catch (error) {
-        console.log("====================================");
-        console.log(
-          "Error Fetching Data User Detail: ",
-          error.response ? error.response.data : error
-        );
-        console.log("====================================");
+        console.log(error);
       }
     },
   },
@@ -42,6 +36,14 @@ export const useUserStores = defineStore("User", {
 
 export async function setLogin(data: LoginTypes) {
   const url = `http://localhost:3000/auth/login`;
+  return callAPI({
+    url,
+    method: "POST",
+    data,
+  });
+}
+export async function setRegister(data: RegisterTypes) {
+  const url = `http://localhost:3000/auth/register`;
   return callAPI({
     url,
     method: "POST",

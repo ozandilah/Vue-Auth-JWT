@@ -1,15 +1,31 @@
 <script setup lang="ts">
 import { useUserStores } from "@/stores/user";
 import { computed, onMounted } from "vue";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Cookies from "js-cookie";
+import { useRouter } from "vue-router";
 
 const userStore = useUserStores();
 const user = computed(() => userStore.getUser);
-const isLoggedIn = computed(() => userStore.isLoggedIn);
-console.log(user);
-
+const router = useRouter();
 onMounted(() => {
   userStore.fetchingUser();
 });
+
+async function logout() {
+  Cookies.remove("token");
+  router.push("/");
+}
 </script>
 
 <template>
@@ -26,7 +42,12 @@ onMounted(() => {
         </CardHeader>
         <CardContent class="grid gap-4"> </CardContent>
         <CardFooter class="flex-col space-y-2">
-          <Button class="w-full" type="submit" variant="destructive">
+          <Button
+            class="w-full"
+            type="submit"
+            variant="destructive"
+            @click="logout"
+          >
             Logout
           </Button>
         </CardFooter>
